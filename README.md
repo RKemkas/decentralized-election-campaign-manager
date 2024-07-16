@@ -1,4 +1,4 @@
-# Campaign Management Platform
+# Decentralized-election-campaign-manager
 
 This project is a decentralized platform built on the Internet Computer, designed to facilitate the management of campaigns, donations, expenses, voter outreach, and secure communication within the campaign community. It leverages blockchain technology to ensure transparency and reliability in the management processes.
 
