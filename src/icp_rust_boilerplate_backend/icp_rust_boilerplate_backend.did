@@ -92,7 +92,7 @@ service : {
   create_donation : (DonationPayload, UserPayload) -> (Result_1);
   create_expense : (ExpensePayload, UserPayload) -> (Result_2);
   create_user : (UserPayload) -> (Result_3);
-  create_voter_outreach : (VoterOutreachPayload) -> (Result_4);
+  create_voter_outreach : (VoterOutreachPayload, UserPayload) -> (Result_4);
   get_campaign_by_id : (nat64) -> (Result) query;
   get_campaigns : () -> (Result_5) query;
   get_donations : (nat64) -> (Result_6) query;
@@ -101,6 +101,6 @@ service : {
   get_user_by_id : (nat64) -> (Result_3) query;
   get_users : () -> (Result_9) query;
   get_voter_outreach : (nat64) -> (Result_10) query;
-  send_message_to_campaign : (MessagePayload) -> (Result_11);
-  update_campaign : (UpdateCampaignPayload) -> (Result);
+  send_message_to_campaign : (MessagePayload, UserPayload) -> (Result_11);
+  update_campaign : (UpdateCampaignPayload, UserPayload) -> (Result);
 }

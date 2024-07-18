@@ -328,7 +328,15 @@ fn create_campaign(
 }
 
 #[ic_cdk::update]
-fn update_campaign(payload: UpdateCampaignPayload) -> Result<Campaign, Message> {
+fn update_campaign(payload: UpdateCampaignPayload, user_payload: UserPayload) -> Result<Campaign, Message> {
+    // Authenticate the user
+    let user = authenticate_user(user_payload)?;
+    if user.role != UserRole::Admin && user.role != UserRole::CampaignManager {
+        return Err(Message::UnAuthorized(
+            "You do not have permission to update a campaign".to_string(),
+        ));
+    }
+
     CAMPAIGN_STORAGE.with(|storage| {
         if let Some(mut campaign) = storage.borrow_mut().get(&payload.id) {
             if let Some(name) = payload.name {
@@ -514,7 +522,15 @@ fn get_expenses(campaign_id: u64) -> Result<Vec<Expense>, Message> {
 }
 
 #[ic_cdk::update]
-fn create_voter_outreach(payload: VoterOutreachPayload) -> Result<VoterOutreach, Message> {
+fn create_voter_outreach(payload: VoterOutreachPayload, user_payload: UserPayload) -> Result<VoterOutreach, Message> {
+    // Authenticate the user
+    let user = authenticate_user(user_payload)?;
+    if user.role != UserRole::CampaignManager && user.role != UserRole::Admin {
+        return Err(Message::UnAuthorized(
+            "You do not have permission to create voter outreach activities.".to_string(),
+        ));
+    }
+
     // Ensure 'activity', 'date', and 'status' are provided
     if payload.activity.is_empty() || payload.status.is_empty() {
         return Err(Message::InvalidPayload(
@@ -577,7 +593,15 @@ fn get_voter_outreach(campaign_id: u64) -> Result<Vec<VoterOutreach>, Message> {
 }
 
 #[ic_cdk::update]
-fn send_message_to_campaign(payload: MessagePayload) -> Result<SecureMessage, Message> {
+fn send_message_to_campaign(payload: MessagePayload, user_payload: UserPayload) -> Result<SecureMessage, Message> {
+    // Authenticate the user
+    let user = authenticate_user(user_payload)?;
+    if user.role != UserRole::CampaignManager && user.role != UserRole::Admin {
+        return Err(Message::UnAuthorized(
+            "You do not have permission to send messages to the campaign.".to_string(),
+        ));
+    }
+
     // Ensure 'sender' and 'content' are provided
     if payload.sender.is_empty() || payload.content.is_empty() {
         return Err(Message::InvalidPayload(
